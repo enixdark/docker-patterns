@@ -1,0 +1,10 @@
+[template]
+keys = [
+	"docker-services"
+]
+
+watch = true
+src = "proxy_ajp.conf.tmpl"
+dest = "/etc/apache2/mods-available/proxy_ajp.conf"
+
+reload_cmd = "/usr/sbin/apache2ctl restart"
