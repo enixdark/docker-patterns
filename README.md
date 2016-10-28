@@ -6,7 +6,7 @@ It includes a HTML5 Terminal emulation which can be used from within the browser
 
 For the demos to work, the following software is installed:
 
-* Java 1.7
+* Java 8
 * Maven 3.3.9
 * Docker 1.9.1
 * Emacs 25.0.50.1
