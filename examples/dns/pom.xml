@@ -1,0 +1,78 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>de.ro14nd</groupId>
+  <artifactId>javaland2016-dns</artifactId>
+  <version>0.1</version>
+
+
+
+  <dependencies>
+    <dependency>
+      <groupId>com.spotify</groupId>
+      <artifactId>dns</artifactId>
+      <version>3.1.1</version>
+    </dependency>
+  </dependencies>
+
+  <properties>
+    <docker.image>ro14nd/dns-demo</docker.image>
+    <fabric8.imagePullPolicy>IfNotPresent</fabric8.imagePullPolicy>
+    <fabric8.env.K8S_SLEEP>3600</fabric8.env.K8S_SLEEP>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>docker-maven-plugin</artifactId>
+        <version>0.14.1</version>
+        <configuration>
+          <images>
+            <!-- Docker Image to use -->
+            <image>
+              <alias>dns-lookup</alias>
+              <name>${docker.image}</name>
+              <build>
+                <from>fabric8/java-alpine-openjdk8-jdk</from>
+                <assembly>
+                  <descriptorRef>artifact-with-dependencies</descriptorRef>
+                </assembly>
+                <entryPoint>
+                  <arg>java</arg>
+                  <arg>-cp</arg>
+                  <arg>/maven/*</arg>
+                  <arg>de.ro14nd.javaland2016.dns.DnsCheck</arg>
+                </entryPoint>
+              </build>
+            </image>
+          </images>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>fabric8-maven-plugin</artifactId>
+        <version>2.2.96</version>
+        <executions>
+          <execution>
+            <id>json</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>json</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>attach</id>
+            <phase>package</phase>
+            <goals>
+              <goal>attach</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
+</project>
