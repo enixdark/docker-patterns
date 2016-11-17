@@ -4,7 +4,8 @@ import javax.servlet.http.*;
 
 public class ConfigContainerDemo extends HttpServlet {
 
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+    protected void doGet(HttpServletRequest req, 
+                         HttpServletResponse resp)
         throws IOException {
 
         Properties config = getConfig();
@@ -17,10 +18,9 @@ public class ConfigContainerDemo extends HttpServlet {
             "</h1></body></html>");
     }
 
-    private Properties getConfig()
-        throws IOException {
+    private Properties getConfig() throws IOException {
         Properties props = new Properties();
         props.load(new FileInputStream("/config/demo.properties"));
         return props;
-	    }
+    }
 }

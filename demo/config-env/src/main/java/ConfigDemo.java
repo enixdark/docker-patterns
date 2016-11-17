@@ -4,7 +4,8 @@ import javax.servlet.http.*;
 
 public class ConfigDemo extends HttpServlet {
 
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+    protected void doGet(HttpServletRequest req, 
+                         HttpServletResponse resp)
         throws IOException {
 
         Properties config = getConfig();

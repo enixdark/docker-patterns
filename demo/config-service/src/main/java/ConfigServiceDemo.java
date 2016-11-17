@@ -8,7 +8,8 @@ import com.ecwid.consul.v1.ConsulClient;
 
 public class ConfigServiceDemo extends HttpServlet {
 
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+    protected void doGet(HttpServletRequest req, 
+                         HttpServletResponse resp)
         throws IOException {
 
         Properties config = getConfig();
