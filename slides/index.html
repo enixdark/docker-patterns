@@ -691,7 +691,32 @@
       }
     }
   }
+  Reveal.addEventListener( 'slidechanged', demo );
+  Reveal.addEventListener( 'ready', demo );
 
+  var use8BitdoKeymap = (localStorage && localStorage.getItem("use8Bitdo"))
+  if (use8BitdoKeymap) {
+    Reveal.configure({
+      keyboard: {
+        86: 'next',
+        87: 'prev',
+        82: 'up',
+        65: 'down',
+        81: 'left',
+        80: 'right',
+        //: 'navigateFragment',
+        83: 'prevFragment',
+        85: 'nextFragment',
+        66: 'togglePause',
+        //84: 'toggleAutoSlide',
+        89: 'toggleOverview',
+        84: function() {
+          // Fullscreen
+          Reveal.triggerKey(70)
+        },
+      }
+    });
+  }
   Reveal.addEventListener( 'slidechanged', demo );
   Reveal.addEventListener( 'ready', demo );
 </script>

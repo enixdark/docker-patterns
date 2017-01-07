@@ -1,6 +1,6 @@
 {
   "name": "reveal.js-menu",
-  "version": "0.5.1",
+  "version": "0.7.2",
   "homepage": "https://denehyg.github.io/reveal.js-menu",
   "authors": [
     "Greg Denehy"
@@ -10,7 +10,7 @@
     "reveal",
     "menu"
   ],
-  "license": "MIT, Copyright (C) 2015 Greg Denehy",
+  "license": "MIT, Copyright (C) 2016 Greg Denehy",
   "ignore": [
     "**/.*",
     "node_modules",
@@ -18,14 +18,13 @@
     "test",
     "tests"
   ],
-  "_release": "0.5.1",
+  "_release": "0.7.2",
   "_resolution": {
     "type": "version",
-    "tag": "0.5.1",
-    "commit": "5f4e60cf7563d348748b75406df65fc0c052cbf0"
+    "tag": "0.7.2",
+    "commit": "1c700b25d7cc8ba8506a10226304e59e34a8102a"
   },
-  "_source": "git://github.com/denehyg/reveal.js-menu.git",
-  "_target": "^0.5.1",
-  "_originalSource": "reveal.js-menu",
-  "_direct": true
+  "_source": "https://github.com/denehyg/reveal.js-menu.git",
+  "_target": "~0.7.2",
+  "_originalSource": "reveal.js-menu"
 }

@@ -5,6 +5,9 @@
  */
 
 var RevealMenu = window.RevealMenu || (function(){
+  // Lookout for "8BITDO" for 8Bitdo keymapping modifications
+  var use8Bitdo = (localStorage && localStorage.getItem("use8Bitdo"))
+
 	var config = Reveal.getConfig();
 	var options = config.menu || {};
 	options.path = options.path || scriptPath() || 'plugin/menu';
@@ -22,6 +25,8 @@ var RevealMenu = window.RevealMenu || (function(){
 			//
 			var side = options.side || 'left';	// 'left' or 'right'
 			var numbers = options.numbers || false;
+			var titleSelector = 'h1, h2, h3, h4, h5';
+			if (typeof options.titleSelector === 'string') titleSelector = options.titleSelector;
 			var hideMissingTitles = options.hideMissingTitles || false;
 			var markers = options.markers || false;
 			var custom = options.custom;
@@ -81,21 +86,33 @@ var RevealMenu = window.RevealMenu || (function(){
 				return { top: _y, left: _x };
 			}
 
-			function keepVisible(el) {
+			function visibleOffset(el) {
 				var offsetFromTop = getOffset(el).top - el.offsetParent.offsetTop;
-				if (offsetFromTop < 0) {
+				if (offsetFromTop < 0) return -offsetFromTop
+				var offsetFromBottom = el.offsetParent.offsetHeight - (el.offsetTop - el.offsetParent.scrollTop + el.offsetHeight);
+				if (offsetFromBottom < 0) return offsetFromBottom;
+				return 0;
+			}
+
+			function keepVisible(el) {
+				var offset = visibleOffset(el);
+				if (offset) {
 					disableMouseSelection();
-					el.scrollIntoView(true);
+					el.scrollIntoView(offset > 0);
 					reenableMouseSelection();
 				}
-				else {
-					var offsetFromBottom = el.offsetParent.offsetHeight - (el.offsetTop - el.offsetParent.scrollTop + el.offsetHeight);
-					if (offsetFromBottom < 0) {
-						disableMouseSelection();
-						el.scrollIntoView(false);
-						reenableMouseSelection();	
-					}
-				}
+			}
+
+			function scrollItemToTop(el) {
+				disableMouseSelection();
+				el.offsetParent.scrollTop = el.offsetTop;
+				reenableMouseSelection();
+			}
+
+			function scrollItemToBottom(el) {
+				disableMouseSelection();
+				el.offsetParent.scrollTop = el.offsetTop - el.offsetParent.offsetHeight + el.offsetHeight
+				reenableMouseSelection();
 			}
 
 			function selectItem(el) {
@@ -104,21 +121,21 @@ var RevealMenu = window.RevealMenu || (function(){
 			}
 
 			function onDocumentKeyDown(event) {
-				if (event.keyCode === 77) {
+				if (event.keyCode === 77 || (use8Bitdo && event.keyCode === 88 /* 8BITDO */)) {
 					toggleMenu();
 				} else if (isOpen()) {
 					event.stopImmediatePropagation();
 					switch( event.keyCode ) {
 						// h, left - change panel
-						case 72: case 37:
+						case 72: case 37: /* 8BITDO --> */ case 81:
 							prevPanel();
 							break;
 						// l, right - change panel
-						case 76: case 39:
+						case 76: case 39: /** 8BITDO --> */ case 80:
 							nextPanel();
 							break;
 						// k, up
-						case 75: case 38:
+						case 75: case 38: /** 8BITDO --> */ case 82:
 							var currItem = $('.active-menu-panel .slide-menu-items li.selected').get(0) || $('.active-menu-panel .slide-menu-items li.active').get(0);
 							if (currItem) {
 								$('.active-menu-panel .slide-menu-items li').removeClass('selected');
@@ -132,7 +149,7 @@ var RevealMenu = window.RevealMenu || (function(){
 							}
 							break;
 						// j, down
-						case 74: case 40:
+						case 74: case 40: /** 8BITDO --> */ case 65:
 							var currItem = $('.active-menu-panel .slide-menu-items li.selected').get(0) || $('.active-menu-panel .slide-menu-items li.active').get(0);
 							if (currItem) {
 								$('.active-menu-panel .slide-menu-items li').removeClass('selected');
@@ -145,8 +162,58 @@ var RevealMenu = window.RevealMenu || (function(){
 								}
 							}
 							break;
+						// pageup, u
+						case 33: case 85: /** 8BITDO --> */ case 83:
+							var itemsAbove = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) > 0; });
+							var visibleItems = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
+
+							var firstVisible = (itemsAbove.length > 0 && Math.abs(visibleOffset(itemsAbove[itemsAbove.length-1])) < itemsAbove[itemsAbove.length-1].clientHeight ? itemsAbove[itemsAbove.length-1] : visibleItems[0]);
+							if (firstVisible) {
+								if ($(firstVisible).hasClass('selected') && itemsAbove.length > 0) {
+									// at top of viewport already, page scroll (if not at start)
+									// ...move selected item to bottom, and change selection to last fully visible item at top
+									scrollItemToBottom(firstVisible);
+									visibleItems = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
+									if (visibleItems[0] == firstVisible) {
+										// prev item is still beyond the viewport (for custom panels)
+										firstVisible = itemsAbove[itemsAbove.length-1];
+									} else {
+										firstVisible = visibleItems[0];
+									}
+								}
+								$('.active-menu-panel .slide-menu-items li').removeClass('selected');
+								selectItem(firstVisible);
+								// ensure selected item is positioned at the top of the viewport
+								scrollItemToTop(firstVisible);
+							}
+							break;
+						// pagedown, d
+						case 34: case 68: /** 8BITDO --> */ case 85:
+							var visibleItems = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
+							var itemsBelow = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) < 0; });
+
+							var lastVisible = (itemsBelow.length > 0 && Math.abs(visibleOffset(itemsBelow[0])) < itemsBelow[0].clientHeight ? itemsBelow[0] : visibleItems[visibleItems.length-1]);
+							if (lastVisible) {
+								if ($(lastVisible).hasClass('selected') && itemsBelow.length > 0) {
+									// at bottom of viewport already, page scroll (if not at end)
+									// ...move selected item to top, and change selection to last fully visible item at bottom
+									scrollItemToTop(lastVisible);
+									visibleItems = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
+									if (visibleItems[visibleItems.length-1] == lastVisible) {
+										// next item is still beyond the viewport (for custom panels)
+										lastVisible = itemsBelow[0];
+									} else {
+										lastVisible = visibleItems[visibleItems.length-1];
+									}
+								}
+								$('.active-menu-panel .slide-menu-items li').removeClass('selected');
+								selectItem(lastVisible);
+								// ensure selected item is positioned at the bottom of the viewport
+								scrollItemToBottom(lastVisible);
+							}
+							break;
 						// home
-						case 36:
+						case 36: /** 8BITDO --> */ case 66:
 							$('.active-menu-panel .slide-menu-items li').removeClass('selected');
 							var sel = $('.active-menu-panel .slide-menu-items li:first-of-type');
 							if (sel.length > 0) {
@@ -154,7 +221,7 @@ var RevealMenu = window.RevealMenu || (function(){
 							}
 							break;
 						// end
-						case 35:
+						case 35: /** 8BITDO --> */ case 84:
 							$('.active-menu-panel .slide-menu-items li').removeClass('selected');
 							var sel = $('.active-menu-panel .slide-menu-items li:last-of-type');
 							if (sel.length > 0) {
@@ -162,14 +229,14 @@ var RevealMenu = window.RevealMenu || (function(){
 							}
 							break;
 						// space, return
-						case 32: case 13:
+						case 32: case 13: /** 8BITDO --> */ case 86:
 							var currItem = $('.active-menu-panel .slide-menu-items li.selected').get(0);
 							if (currItem) {
 								openItem(currItem);
 							}
 							break;
 						// esc
-						case 27: closeMenu(); break;
+						case 27: /** 8BITDO --> */ case 87: closeMenu(); break;
 					}
 				}
 			}
@@ -178,6 +245,14 @@ var RevealMenu = window.RevealMenu || (function(){
 				//XXX add keyboard option for custom key codes, etc.
 
 				document.addEventListener('keydown', onDocumentKeyDown, false);
+
+				// handle key presses within speaker notes
+				window.addEventListener( 'message', function( event ) {
+					var data = JSON.parse( event.data );
+					if (data.method === 'triggerKey') {
+						onDocumentKeyDown( { keyCode: data.args[0], stopImmediatePropagation: function() {} } );
+					}
+				});
 
 				// Prevent reveal from processing keyboard events when the menu is open
 				if (config.keyboardCondition && typeof config.keyboardCondition === 'function') {
@@ -305,16 +380,13 @@ var RevealMenu = window.RevealMenu || (function(){
 			//
 			// Slide links
 			//
-			function item(type, section, i, h, v) {
+			function generateItem(type, section, i, h, v) {
 				var link = '/#/' + h;
 				if (typeof v === 'number' && !isNaN( v )) link += '/' + v;
 
-				if ($('.menu-title.category',section).text()) {
-					type += ' menu-category';
-				}
 				var title = $(section).data('menu-title') ||
 					$('.menu-title', section).text() ||
-					$('h1, h2, h3, h4, h5, h6', section).text();
+					$(titleSelector, section).text();
 				if (!title) {
 					if (hideMissingTitles) return '';
 					title = "Slide " + i;
@@ -358,11 +430,11 @@ var RevealMenu = window.RevealMenu || (function(){
 				var m = '';
 				if (markers) {
 					m = '<i class="fa fa-check-circle past"></i>' +
-								'<i class="fa fa-dot-circle-o active"></i>' + 
+								'<i class="fa fa-dot-circle-o active"></i>' +
 								'<i class="fa fa-circle-thin future"></i>';
 				}
 
-				return '<li class="' + type + '" data-item="' + i + '" data-slide-h="' + h + '" data-slide-v="' + v + '">' + m + title + '</li>';
+				return '<li class="' + type + '" data-item="' + i + '" data-slide-h="' + h + '" data-slide-v="' + (v === undefined ? 0 : v) + '">' + m + title + '</li>';
 			}
 
 			function openItem(item) {
@@ -417,71 +489,92 @@ var RevealMenu = window.RevealMenu || (function(){
 				});
 			}
 
-			$('<div data-panel="Slides" class="slide-menu-panel"><ul class="slide-menu-items"></ul></div>')
-				.appendTo(panels)
-				.addClass('active-menu-panel');
-			var items = $('.slide-menu-items');
-			var slideCount = 0;
-			$('.slides > section').each(function(section, h) {
-				var subsections = $('section', section);
-				if (subsections.length > 0) {
-					subsections.each(function(subsection, v) {
-						slideCount++;
-						var type = (v === 0 ? 'slide-menu-item' : 'slide-menu-item-vertical');
-						items.append(item(type, subsection, slideCount, h, v));
+			function createSlideMenu() {
+				if ( !document.querySelector('section[data-markdown]:not([data-markdown-parsed])') ) {
+					$('<div data-panel="Slides" class="slide-menu-panel"><ul class="slide-menu-items"></ul></div>')
+						.appendTo(panels)
+						.addClass('active-menu-panel');
+					var items = $('.slide-menu-panel[data-panel="Slides"] > .slide-menu-items');
+					var slideCount = 0;
+					$('.slides > section').each(function(section, h) {
+						var subsections = $('section', section);
+						if (subsections.length > 0) {
+							subsections.each(function(subsection, v) {
+								var type = (v === 0 ? 'slide-menu-item' : 'slide-menu-item-vertical');
+								var item = generateItem(type, subsection, slideCount, h, v);
+								if (item) {
+									slideCount++;
+									items.append(item);
+								}
+							});
+						} else {
+							var item = generateItem('slide-menu-item', section, slideCount, h);
+							if (item) {
+								slideCount++;
+								items.append(item);
+							}
+						}
 					});
-				} else {
-					slideCount++;
-					var type = 'slide-menu-item';
-					items.append(item(type, section, slideCount, h));
+					$('.slide-menu-item, .slide-menu-item-vertical').click(clicked);
+					highlightCurrentSlide();
 				}
-			});
-			$('.slide-menu-item, .slide-menu-item-vertical').click(clicked);
+				else {
+				// wait for markdown to be loaded and parsed
+					setTimeout( createSlideMenu, 100 );
+				}
+			}
 
+			createSlideMenu();
 			Reveal.addEventListener('slidechanged', highlightCurrentSlide);
-			highlightCurrentSlide();
 
 			//
 			// Custom menu panels
 			//
 			if (custom) {
-				custom.forEach(function(element, index, array) {
-					var panel = $('<div data-panel="Custom' + index + '" class="slide-menu-panel slide-menu-custom-panel"></div>');
-					if (element.content) {
-						$(element.content).appendTo(panel);
+				function xhrSuccess () {
+					if (this.status >= 200 && this.status < 300) {
+						$(this.responseText).appendTo(this.panel);
+						enableCustomLinks(this.panel);
 					}
-					if (element.src) {
-						var xhr = new XMLHttpRequest();
-						xhr.onreadystatechange = function() {
-							if( xhr.readyState === 4 ) {
-								// file protocol yields status code 0 (useful for local debug, mobile applications etc.)
-								if ( ( xhr.status >= 200 && xhr.status < 300 ) || xhr.status === 0 ) {
-									$(xhr.responseText).appendTo(panel);
-								}
-								else {
-									content = 'ERROR: The attempt to fetch ' + url + ' failed with HTTP status ' + xhr.status + '.' +
-										'Check your browser\'s JavaScript console for more details.' +
-										'<p>Remember that you need to serve the presentation HTML from a HTTP server.</p>';
-								}
-							}
-						};
-
-						xhr.open( 'GET', element.src, false );
-						try {
-							xhr.send();
-						}
-						catch ( e ) {
-							alert( 'Failed to get file ' + element.src + '. Make sure that the presentation and the file are served by a HTTP server and the file can be found there. ' + e );
-						}
-
+					else {
+						showErrorMsg(this)
 					}
-
-					panel.appendTo(panels);
-
+				}
+				function xhrError () {
+					showErrorMsg(this)
+				}
+				function loadCustomPanelContent (panel, sURL) {
+					var oReq = new XMLHttpRequest();
+					oReq.panel = panel;
+					oReq.arguments = Array.prototype.slice.call(arguments, 2);
+					oReq.onload = xhrSuccess;
+					oReq.onerror = xhrError;
+					oReq.open("get", sURL, true);
+					oReq.send(null);
+				}
+				function enableCustomLinks(panel) {
 					$(panel).find('ul.slide-menu-items li.slide-menu-item').each(function(item, i) {
 						$(item).attr('data-item', i+1);
 						$(item).click(clicked);
 					});
+				}
+				function showErrorMsg(response) {
+					var msg = '<p>ERROR: The attempt to fetch ' + response.responseURL + ' failed with HTTP status ' +
+						response.status + ' (' + response.statusText + ').</p>' +
+						'<p>Remember that you need to serve the presentation HTML from a HTTP server.</p>';
+						$(msg).appendTo(response.panel)
+				}
+
+				custom.forEach(function(element, index, array) {
+					var panel = $('<div data-panel="Custom' + index + '" class="slide-menu-panel slide-menu-custom-panel"></div>');
+					if (element.content) {
+						$(element.content).appendTo(panel);
+						enableCustomLinks(panel);
+					}
+					else if (element.src) {
+						loadCustomPanelContent(panel, element.src);
+					}
+					panel.appendTo(panels);
 				})
 			}
 
@@ -502,7 +595,7 @@ var RevealMenu = window.RevealMenu || (function(){
 			if (transitions) {
 				var panel = $('<div data-panel="Transitions" class="slide-menu-panel"></div>').appendTo(panels);
 				var menu = $('<ul class="slide-menu-items"></ul>').appendTo(panel);
-				['None', 'Fade', 'Slide', 'Convex', 'Concave', 'Zoom'].forEach(function(name, i) {
+				  ['None', 'Fade', 'Slide', 'Convex', 'Concave', 'Zoom', 'Cube', 'Page'].forEach(function(name, i) {
 					$('<li class="slide-menu-item" data-transition="' + name.toLowerCase() + '" data-item="' + (i+1) + '">' + name + '</li>').appendTo(menu).click(clicked);
 				})
 			}
@@ -537,6 +630,35 @@ var RevealMenu = window.RevealMenu || (function(){
 
 			module.toggle = toggleMenu;
 			module.isOpen = isOpen;
+
+			/**
+			 * Extend object a with the properties of object b.
+			 * If there's a conflict, object b takes precedence.
+			 */
+			function extend( a, b ) {
+				for( var i in b ) {
+					a[ i ] = b[ i ];
+				}
+			}
+
+			/**
+			 * Dispatches an event of the specified type from the
+			 * reveal DOM element.
+			 */
+			function dispatchEvent( type, args ) {
+				var event = document.createEvent( 'HTMLEvents', 1, 2 );
+				event.initEvent( type, true, true );
+				extend( event, args );
+				document.querySelector('.reveal').dispatchEvent( event );
+
+				// If we're in an iframe, post each reveal.js event to the
+				// parent window. Used by the notes plugin
+				if( config.postMessageEvents && window.parent !== window.self ) {
+					window.parent.postMessage( JSON.stringify({ namespace: 'reveal', eventName: type, state: getState() }), '*' );
+				}
+			}
+
+			dispatchEvent('menu-ready');
 		}
 	})
 	})
