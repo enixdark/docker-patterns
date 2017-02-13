@@ -3,7 +3,23 @@
   "agenda.html",
   [
     "docker/title.html",
+    "docker/intro.html",
+    "docker/vm-vs-container.html",
+    "docker/concepts.html",
+    "docker/concepts-2.html",
+    "docker/commands.html",
+    "demo.html",
     "docker/zoo.html"
+  ],
+  [
+    "kubernetes/title.html",
+    "kubernetes/overview.html",
+    "kubernetes/architecture.html"
+  ],
+  [
+    "openshift/title.html",
+    "openshift/overview.html",
+    "openshift/extra.html"
   ],
   [
     "patterns/title.html",
@@ -44,7 +60,6 @@
   [
     "discovery/envvar-injection/envvar.html",
     "discovery/envvar-injection/kubernetes.html",
-    "discovery/envvar-injection/fabric8.html",
     "discovery/envvar-injection/conclusion.html"
   ],
   [
@@ -77,7 +92,7 @@
     "build/dockerfile-template/fish-pepper.html",
     "build/dockerfile-template/fish-pepper-example.html",
     "build/dockerfile-template/fish-pepper-example-2.html",
-    "demo.html",
+    "build/dockerfile-template/fish-pepper-images.html",
     "build/dockerfile-template/conclusion.html"
   ],
   [

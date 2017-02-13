@@ -69,7 +69,81 @@
 
       
       
+    <section class="has-light-background" data-background-color="#f6f6f6" data-background-image="images/background.png" data-html="slides/docker/intro.html"></section>
+
+
+      
+      
+    <section class="has-light-background" data-background-color="#f6f6f6" data-background-image="images/background.png" data-html="slides/docker/vm-vs-container.html"></section>
+
+
+      
+      
+    <section class="has-light-background" data-background-color="#f6f6f6" data-background-image="images/background.png" data-html="slides/docker/concepts.html"></section>
+
+
+      
+      
+    <section class="has-light-background" data-background-color="#f6f6f6" data-background-image="images/background.png" data-html="slides/docker/concepts-2.html"></section>
+
+
+      
+      
+    <section class="has-light-background" data-background-color="#f6f6f6" data-background-image="images/background.png" data-html="slides/docker/commands.html"></section>
+
+
+      
+      
+    <section class="has-light-background" data-background-color="#f6f6f6" data-background-image="images/background.png" data-html="slides/demo.html"></section>
+
+
+      
+      
     <section class="has-light-background" data-background-color="#f6f6f6" data-background-image="images/background.png" data-html="slides/docker/zoo.html"></section>
+
+
+      
+    </section>
+    
+    
+    
+    
+    <section>
+      
+      
+    <section class="has-light-background" data-background-color="#f6f6f6" data-background-image="images/background.png" data-html="slides/kubernetes/title.html"></section>
+
+
+      
+      
+    <section class="has-light-background" data-background-color="#f6f6f6" data-background-image="images/background.png" data-html="slides/kubernetes/overview.html"></section>
+
+
+      
+      
+    <section class="has-light-background" data-background-color="#f6f6f6" data-background-image="images/background.png" data-html="slides/kubernetes/architecture.html"></section>
+
+
+      
+    </section>
+    
+    
+    
+    
+    <section>
+      
+      
+    <section class="has-light-background" data-background-color="#f6f6f6" data-background-image="images/background.png" data-html="slides/openshift/title.html"></section>
+
+
+      
+      
+    <section class="has-light-background" data-background-color="#f6f6f6" data-background-image="images/background.png" data-html="slides/openshift/overview.html"></section>
+
+
+      
+      
+    <section class="has-light-background" data-background-color="#f6f6f6" data-background-image="images/background.png" data-html="slides/openshift/extra.html"></section>
 
 
       
@@ -253,11 +327,6 @@
 
       
       
-    <section class="has-light-background" data-background-color="#f6f6f6" data-background-image="images/background.png" data-html="slides/discovery/envvar-injection/fabric8.html"></section>
-
-
-      
-      
     <section class="has-light-background" data-background-color="#f6f6f6" data-background-image="images/background.png" data-html="slides/discovery/envvar-injection/conclusion.html"></section>
 
 
@@ -398,7 +467,7 @@
 
       
       
-    <section class="has-light-background" data-background-color="#f6f6f6" data-background-image="images/background.png" data-html="slides/demo.html"></section>
+    <section class="has-light-background" data-background-color="#f6f6f6" data-background-image="images/background.png" data-html="slides/build/dockerfile-template/fish-pepper-images.html"></section>
 
 
       
@@ -690,35 +759,37 @@
         demo.style.paddingTop = localStorage.getItem("paddingTop");
       }
     }
+
+    var use8BitdoKeymap = (localStorage && localStorage.getItem("use8Bitdo"))
+    if (use8BitdoKeymap) {
+      Reveal.configure({
+        keyboard: {
+          86: 'next',
+          87: 'prev',
+          82: 'up',
+          65: 'down',
+          81: 'left',
+          80: 'right',
+          //: 'navigateFragment',
+          83: 'prevFragment',
+          85: 'nextFragment',
+          66: 'togglePause',
+          //84: 'toggleAutoSlide',
+          89: 'toggleOverview',
+          84: function() {
+            // Fullscreen
+            Reveal.triggerKey(70)
+          },
+        }
+      });
+    }
   }
+
+  Reveal.addEventListener( 'slidechanged', demo );
+  Reveal.addEventListener( 'ready', demo );
   Reveal.addEventListener( 'slidechanged', demo );
   Reveal.addEventListener( 'ready', demo );
 
-  var use8BitdoKeymap = (localStorage && localStorage.getItem("use8Bitdo"))
-  if (use8BitdoKeymap) {
-    Reveal.configure({
-      keyboard: {
-        86: 'next',
-        87: 'prev',
-        82: 'up',
-        65: 'down',
-        81: 'left',
-        80: 'right',
-        //: 'navigateFragment',
-        83: 'prevFragment',
-        85: 'nextFragment',
-        66: 'togglePause',
-        //84: 'toggleAutoSlide',
-        89: 'toggleOverview',
-        84: function() {
-          // Fullscreen
-          Reveal.triggerKey(70)
-        },
-      }
-    });
-  }
-  Reveal.addEventListener( 'slidechanged', demo );
-  Reveal.addEventListener( 'ready', demo );
 </script>
 
 </body>

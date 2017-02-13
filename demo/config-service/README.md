@@ -17,3 +17,5 @@
      docker run --link consul -it -p 8080:8080 demo
                
 * Open Browser at ${DOCKER_HOST IP}:8080
+
+(#1c69d4)
