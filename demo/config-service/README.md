@@ -4,7 +4,7 @@
      
 * Create Docker image
 
-     docker build -t demo .
+     docker build -t config-service .
 
 * Start consul
 
@@ -14,6 +14,6 @@
 
 * Run Tomcat
 
-     docker run --link consul -it -p 8080:8080 demo
+     docker run --link consul -it -p 8080:8080 config-container
                
 * Open Browser at ${DOCKER_HOST IP}:8080

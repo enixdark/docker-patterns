@@ -44,7 +44,6 @@
   [
     "discovery/envvar-injection/envvar.html",
     "discovery/envvar-injection/kubernetes.html",
-    "discovery/envvar-injection/fabric8.html",
     "discovery/envvar-injection/conclusion.html"
   ],
   [
@@ -77,12 +76,13 @@
     "build/dockerfile-template/fish-pepper.html",
     "build/dockerfile-template/fish-pepper-example.html",
     "build/dockerfile-template/fish-pepper-example-2.html",
-    "demo.html",
+    "build/dockerfile-template/images.html",    
     "build/dockerfile-template/conclusion.html"
   ],
   [
     "build/image-factory/factory.html",
-    "build/image-factory/ansible.html",
+    "build/image-factory/ansible-container.html",
+    "build/image-factory/ansible-container-flow.html",
     "build/image-factory/conclusion.html"
   ],
   [
@@ -104,5 +104,6 @@
     "bonus/wormhole.html"
   ],
   "wrap-up.html",
+  "pattern-book.html",
   "questions-red.html"
 ]
