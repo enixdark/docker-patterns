@@ -21,6 +21,8 @@ Have fun (and feel free to open [issues](https://github.com/rhuss/docker-pattern
 
 ## Links
 
+* [Slides](docker-patterns-voxxed-athens.pdf)
+
 ### Patterns
 * [Writing Software Patterns](http://www.martinfowler.com/articles/writingPatterns.html)
 
