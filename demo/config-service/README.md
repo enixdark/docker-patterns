@@ -14,6 +14,6 @@
 
 * Run Tomcat
 
-     docker run --link consul -it -p 8080:8080 config-container
+     docker run --link consul -it -p 8080:8080 config-service
                
 * Open Browser at ${DOCKER_HOST IP}:8080
