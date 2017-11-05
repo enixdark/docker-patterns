@@ -11,7 +11,7 @@
 * Make dev-config container:
     
      docker build -q --build-arg config=dev.properties -f Dockerfile-config -t dev-config-image .
-     docker run --name dev-config dev-config-image
+     docker create --name dev-config dev-config-image .
          
 * Start demo image with dev-config:
 
