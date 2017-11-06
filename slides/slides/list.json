@@ -61,6 +61,7 @@
     "sidecar/overview.html",
     "sidecar/sidecar.html",
     "sidecar/sidecar-schema.html",
+    "demo.html",
     "sidecar/ambassador.html",
     "sidecar/ambassador-schema.html",
     "sidecar/adapter.html",

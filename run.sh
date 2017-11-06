@@ -10,5 +10,6 @@ docker run -it --rm \
       -v $(pwd)/demo:/demo \
       -v $(pwd)/m2:/root/.m2 \
       -e MAVEN_OPTS="-Ddocker.host.address=127.0.0.1" \
+      -e HOST_HOME=$(pwd) \
       -p 9000:9000 -p 57575:57575 -p 35729:35729 \
       rhuss/docker-patterns:${tag} $*
