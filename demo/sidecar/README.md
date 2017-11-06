@@ -9,7 +9,8 @@ docker build -t git-poller .
 ## Creating sidecar via bind mounts
 
 ```
-
+docker run -d -v $(pwd)/html:/var/lib/data git-poller
+docker run -d -v $(pwd)/html:/var/www/html -p 8080:80 centos/httpd
 ```
 
 * [Bind Mounts](https://docs.docker.com/engine/admin/volumes/bind-mounts/)
@@ -24,7 +25,12 @@ docker run -d --mount source=html-data,target=/var/www/html -p 8080:80 centos/ht
 docker volume ls
 ```
 
-## Start HTTP daemon with volume link
+## Browser
+
+* Goto http://localhost:8080
+* Then goto https://github.com/ro14nd-talks/docker-patterns/blob/sidecar-html-demo/
+* Adapt [scripts/main.js](https://github.com/ro14nd-talks/docker-patterns/blob/sidecar-html-demo/scripts/main.js)
+* Reload page
 
 ## Kubernetes Example
 

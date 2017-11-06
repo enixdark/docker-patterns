@@ -1,6 +1,6 @@
 FROM axeclbr/git
 
-ENV GIT_REPO https://github.com/mdn/beginner-html-site-scripted
+ENV GIT_REPO "-b sidecar-html-demo https://github.com/ro14nd-talks/docker-patterns"
 
 WORKDIR /var/lib/data
 ENTRYPOINT rm -rf .git * && git clone ${GIT_REPO} . && watch -n 10 git pull
