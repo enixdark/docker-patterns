@@ -22,19 +22,16 @@
     "config/envvar/kubernetes.html",
     "config/envvar/compose.html",
     "config/envvar/evaluation.html",
-    "demo.html",
     "config/envvar/conclusion.html"
   ],
   [
     "config/container/config.html",
     "config/container/example.html",
     "demo.html",
-    "config/container/configmap.html",
     "config/container/conclusion.html"
   ],
   [
     "config/lookup/lookup.html",
-    "demo.html",
     "config/lookup/conclusion.html"
   ],
   [
@@ -54,7 +51,8 @@
     "discovery/dynamic-dns/dns.html",
     "discovery/dynamic-dns/example-jndi.html",
     "discovery/dynamic-dns/example-spotify.html",
-    "discovery/dynamic-dns/conclusion.html"
+    "discovery/dynamic-dns/conclusion.html",
+    "demo.html"
   ],
   [
     "sidecar/title.html",
@@ -71,10 +69,23 @@
   [
     "build/title.html",
     "build/overview.html",
-    "build/classic.html"
+    "build/self-contained/self-contained.html",
+    "build/self-contained/conclusion.html",
+    "build/artifact-container/artifact.html",
+    "build/artifact-container/conclusion.html",
+    "build/build-integration/build-integration.html",
+    "build/build-integration/build-sample-config.html",
+    "demo.html",
+    "build/build-integration/build-conclusion.html"
   ],
   [
-
+    "bonus/title.html",
+    "bonus/wormhole.html"
+  ],
+  "wrap-up.html",
+  "pattern-book.html",
+  "questions-red.html",
+    [
     "build/dockerfile-template/template.html",
     "build/dockerfile-template/build-args.html",
     "build/dockerfile-template/fish-pepper.html",
@@ -88,26 +99,5 @@
     "build/image-factory/ansible-container.html",
     "build/image-factory/ansible-container-flow.html",
     "build/image-factory/conclusion.html"
-  ],
-  [
-    "build/self-contained/self-contained.html",
-    "build/self-contained/conclusion.html"
-  ],
-  [
-    "build/artifact-container/artifact.html",
-    "build/artifact-container/conclusion.html"
-  ],
-  [
-    "build/build-integration/build-integration.html",
-    "build/build-integration/build-sample-config.html",
-    "demo.html",
-    "build/build-integration/build-conclusion.html"
-  ],
-  [
-    "bonus/title.html",
-    "bonus/wormhole.html"
-  ],
-  "wrap-up.html",
-  "pattern-book.html",
-  "questions-red.html"
+  ]
 ]

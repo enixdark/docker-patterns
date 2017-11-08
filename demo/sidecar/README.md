@@ -28,7 +28,7 @@ docker volume ls
 ## Browser
 
 * Goto http://localhost:8080
-* Then goto https://github.com/ro14nd-talks/docker-patterns/blob/sidecar-html-demo/
+* Then goto https://github.com/ro14nd-talks/docker-patterns/tree/sidecar-html-demo
 * Adapt [scripts/main.js](https://github.com/ro14nd-talks/docker-patterns/blob/sidecar-html-demo/scripts/main.js)
 * Reload page
 
